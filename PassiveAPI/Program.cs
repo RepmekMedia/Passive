@@ -1,28 +1,30 @@
-var builder = WebApplication.CreateBuilder(args);
+using JSLibrary.TPL;
+using NLog.Web;
 
-// Add services to the container.
-
-builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
-var app = builder.Build();
-
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+namespace PassiveAPI
 {
-    app.UseSwagger();
-    app.UseSwaggerUI(c =>
+    public static class Program
     {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "My Test1 Api v1");
-    });
+        public static void Main(string[] args)
+        {
+#if DEV || DEBUG
+            Environment.SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", "Development");
+#else
+            Environment.SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", "Production");
+#endif
+            ParallelTask.SetMultiplicator(1);
+        }
+
+        private static IHostBuilder CreateDefaultHostBuilder(string[] args) => Host
+            .CreateDefaultBuilder(args).ConfigureWebHostDefaults(webbuilder =>
+            {
+                webbuilder.UseStartup<Startup>()
+                .ConfigureLogging(logging =>
+                {
+                    logging.ClearProviders();
+                    logging.AddSimpleConsole();
+                })
+                .UseNLog();
+            });
+    }
 }
-
-app.UseHttpsRedirection();
-
-app.UseAuthorization();
-
-app.MapControllers();
-
-app.Run();
