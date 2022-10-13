@@ -1,7 +1,7 @@
 ﻿using JSLibrary.AuthenticationHandlers.Credentials.Interfaces;
 using JSLibrary.AuthenticationHandlers.Responses.Interfaces;
 
-namespace PassiveAPI.Managements.Interfaces
+namespace Passive.API.Managements.Interfaces
 {
     public interface ITokenManagement
     {

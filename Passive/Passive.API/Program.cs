@@ -1,7 +1,7 @@
 using JSLibrary.TPL;
 using NLog.Web;
 
-namespace PassiveAPI
+namespace Passive.API
 {
     public static class Program
     {

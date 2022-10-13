@@ -1,7 +1,7 @@
 ﻿using JSLibrary.Logics.Business.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
-namespace PassiveAPI.Controllers.Base
+namespace Passive.API.Controllers.Base
 {
     [ApiController]
     [Route("api/[controller]")]

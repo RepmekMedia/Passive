@@ -4,11 +4,11 @@ using JSLibrary.AuthenticationHandlers.Responses.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using PassiveAPI.Managements.Interfaces;
+using Passive.API.Managements.Interfaces;
 using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
 
-namespace PassiveAPI.Controllers
+namespace Passive.API.Controllers
 {
     [AllowAnonymous]
     [ApiController]

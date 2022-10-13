@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Builder;
 
-namespace PassiveAPI
+namespace Passive.API
 {
     public class Startup
     {
