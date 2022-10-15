@@ -1,7 +1,10 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using EFCoreSecondLevelCacheInterceptor;
+using MessagePack;
+using MessagePack.Formatters;
+using MessagePack.Resolvers;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage;
 using Passive.API.DBContexts;
+using Passive.API.Formatters;
 
 namespace Passive.API
 {
@@ -17,7 +20,7 @@ namespace Passive.API
         {
             services.AddDbContext<AccessContext>(options =>
             {
-                // TODO: ConnectionString to Docker MySQL DB and the MySQL Version
+                // TODO: ConnectionString to Docker MySQL DB and the MySQL Versionqw
                 options.UseMySql("", new MySqlServerVersion(new Version(1, 1, 1)), m =>
                 {
                     m.UseNewtonsoftJson(MySqlCommonJsonChangeTrackingOptions.FullHierarchyOptimizedFast);
@@ -26,6 +29,43 @@ namespace Passive.API
                 });
 
                 options.EnableSensitiveDataLogging(true);
+            });
+
+            const string cacheProviderName = "redisCache";
+            services.AddEFSecondLevelCache(options =>
+            {
+                options.UseEasyCachingCoreProvider(cacheProviderName, isHybridCache: false).DisableLogging(false).UseCacheKeyPrefix("EF_");
+                options.CacheAllQueries(CacheExpirationMode.Absolute, TimeSpan.FromMinutes(5));
+            });
+
+            services.AddEasyCaching(options =>
+            {
+                options.UseRedis(config =>
+                {
+                    config.DBConfig.AllowAdmin = true;
+                    config.DBConfig.SyncTimeout = 10000;
+                    config.DBConfig.AsyncTimeout = 10000;
+                    // TODO: IP RedisDocker
+                    config.DBConfig.Endpoints.Add(new EasyCaching.Core.Configurations.ServerEndPoint("127.0.0.1", 6379));
+                    config.EnableLogging = true;
+                    config.SerializerName = "Pack";
+                    config.DBConfig.ConnectionTimeout = 10000;
+                }, cacheProviderName)
+                .WithMessagePack(so =>
+                {
+                    so.EnableCustomResolver = true;
+                    so.CustomResolvers = CompositeResolver.Create(
+                    new IMessagePackFormatter[]
+                    {
+                                               DBNullFormatter.Instance,
+                    },
+                    new IFormatterResolver[]
+                    {
+                                              NativeDateTimeResolver.Instance,
+                                              ContractlessStandardResolver.Instance,
+                                              StandardResolverAllowPrivate.Instance,
+                    });
+                }, "Pack");
             });
 
             services.AddEndpointsApiExplorer();
