@@ -1,4 +1,7 @@
 ﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
+using Passive.API.DBContexts;
 
 namespace Passive.API
 {
@@ -12,7 +15,18 @@ namespace Passive.API
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddLogging();
+            services.AddDbContext<AccessContext>(options =>
+            {
+                // TODO: ConnectionString to Docker MySQL DB and the MySQL Version
+                options.UseMySql("", new MySqlServerVersion(new Version(1, 1, 1)), m =>
+                {
+                    m.UseNewtonsoftJson(MySqlCommonJsonChangeTrackingOptions.FullHierarchyOptimizedFast);
+                    m.EnableIndexOptimizedBooleanColumns();
+                    m.EnableRetryOnFailure();
+                });
+
+                options.EnableSensitiveDataLogging(true);
+            });
 
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen();
