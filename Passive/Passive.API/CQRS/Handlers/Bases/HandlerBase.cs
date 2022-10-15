@@ -9,7 +9,7 @@ namespace Passive.API.CQRS.Handlers.Bases
 {
     public abstract class HandlerBase<TModel, TModelKey, TRequest, TResponse> : IHandler<TRequest, TResponse> where TModel : class, IIdentifierModel<TModelKey> where TRequest : IRequest<TResponse> where TModelKey : IEquatable<TModelKey>
     {
-        protected HandlerBase(ILogger<HandlerBase> logger, IBusinessLogicBase<TModel, TModelKey, DbContext> businessLogicBase)
+        protected HandlerBase(ILogger logger, IBusinessLogicBase<TModel, TModelKey, DbContext> businessLogicBase)
         {
             this.Logger = logger;
             this.BusinessLogicBase = businessLogicBase;
