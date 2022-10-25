@@ -1,10 +1,4 @@
-﻿using EFCoreSecondLevelCacheInterceptor;
-using MessagePack;
-using MessagePack.Formatters;
-using MessagePack.Resolvers;
-using Microsoft.EntityFrameworkCore;
-using Passive.API.DBContexts;
-using Passive.API.Formatters;
+﻿using Passive.API.Extensions;
 
 namespace Passive.API
 {
@@ -18,57 +12,14 @@ namespace Passive.API
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<AccessContext>(options =>
-            {
-                // TODO: ConnectionString to Docker MySQL DB and the MySQL Versionqw
-                options.UseMySql("", new MySqlServerVersion(new Version(1, 1, 1)), m =>
-                {
-                    m.UseNewtonsoftJson(MySqlCommonJsonChangeTrackingOptions.FullHierarchyOptimizedFast);
-                    m.EnableIndexOptimizedBooleanColumns();
-                    m.EnableRetryOnFailure();
-                });
+            services.AddLogging();
 
-                options.EnableSensitiveDataLogging(true);
-            });
+            services.AddDBContexts(Configuration);
 
-            const string cacheProviderName = "redisCache";
-            services.AddEFSecondLevelCache(options =>
-            {
-                options.UseEasyCachingCoreProvider(cacheProviderName, isHybridCache: false).DisableLogging(false).UseCacheKeyPrefix("EF_");
-                options.CacheAllQueries(CacheExpirationMode.Absolute, TimeSpan.FromMinutes(5));
-            });
-
-            services.AddEasyCaching(options =>
-            {
-                options.UseRedis(config =>
-                {
-                    config.DBConfig.AllowAdmin = true;
-                    config.DBConfig.SyncTimeout = 10000;
-                    config.DBConfig.AsyncTimeout = 10000;
-                    // TODO: IP RedisDocker
-                    config.DBConfig.Endpoints.Add(new EasyCaching.Core.Configurations.ServerEndPoint("127.0.0.1", 6379));
-                    config.EnableLogging = true;
-                    config.SerializerName = "Pack";
-                    config.DBConfig.ConnectionTimeout = 10000;
-                }, cacheProviderName)
-                .WithMessagePack(so =>
-                {
-                    so.EnableCustomResolver = true;
-                    so.CustomResolvers = CompositeResolver.Create(
-                    new IMessagePackFormatter[]
-                    {
-                                               DBNullFormatter.Instance,
-                    },
-                    new IFormatterResolver[]
-                    {
-                                              NativeDateTimeResolver.Instance,
-                                              ContractlessStandardResolver.Instance,
-                                              StandardResolverAllowPrivate.Instance,
-                    });
-                }, "Pack");
-            });
+            services.AddEFCache(Configuration);
 
             services.AddEndpointsApiExplorer();
+
             services.AddSwaggerGen();
 
             services.AddControllers();
@@ -83,7 +34,7 @@ namespace Passive.API
                 app.UseSwagger();
                 app.UseSwaggerUI(c =>
                 {
-                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "My Test1 Api v1");
+                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "My Passive");
                 });
             }
 
@@ -110,7 +61,7 @@ namespace Passive.API
             });
         }
 
-        private async Task SkipFavicon(HttpContext context, Func<Task> next)
+        private static async Task SkipFavicon(HttpContext context, Func<Task> next)
         {
             if (context.Request.Path.Value == "/favicon.ico")
             {

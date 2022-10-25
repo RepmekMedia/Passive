@@ -13,6 +13,7 @@ namespace Passive.API
             Environment.SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", "Production");
 #endif
             ParallelTask.SetMultiplicator(1);
+            CreateDefaultHostBuilder(args).Build().Run();
         }
 
         private static IHostBuilder CreateDefaultHostBuilder(string[] args) => Host
@@ -22,6 +23,7 @@ namespace Passive.API
                 .ConfigureLogging(logging =>
                 {
                     logging.ClearProviders();
+                    logging.SetMinimumLevel(LogLevel.Trace);
                     logging.AddSimpleConsole();
                 })
                 .UseNLog();

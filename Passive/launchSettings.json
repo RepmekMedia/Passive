@@ -1,0 +1,16 @@
+{
+  "profiles": {
+    "Docker Compose": {
+      "commandName": "DockerCompose",
+      "commandVersion": "1.0",
+      "composeLaunchAction": "LaunchBrowser",
+      "composeLaunchServiceName": "passive.api",
+      "composeLaunchUrl": "{Scheme}://localhost:{ServicePort}/swagger",
+      "serviceActions": {
+        "passive.api": "StartDebugging",
+        "postgres_server": "StartWithoutDebugging",
+        "redis_server": "StartWithoutDebugging"
+      }
+    }
+  }
+}

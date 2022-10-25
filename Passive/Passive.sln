@@ -12,6 +12,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Passive.API", "Passive.API\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Passive.DTOs", "..\Passive.Libraries\Passive.DTOs\Passive.DTOs.csproj", "{AD5D5812-BED8-46D0-A6A9-F1ED510AD84C}"
 EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{01E4E8D1-5C81-4FBF-BC72-269E2E12DD65}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -26,6 +28,10 @@ Global
 		{AD5D5812-BED8-46D0-A6A9-F1ED510AD84C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AD5D5812-BED8-46D0-A6A9-F1ED510AD84C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AD5D5812-BED8-46D0-A6A9-F1ED510AD84C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{01E4E8D1-5C81-4FBF-BC72-269E2E12DD65}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{01E4E8D1-5C81-4FBF-BC72-269E2E12DD65}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{01E4E8D1-5C81-4FBF-BC72-269E2E12DD65}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{01E4E8D1-5C81-4FBF-BC72-269E2E12DD65}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
