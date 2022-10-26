@@ -6,6 +6,7 @@ namespace Passive.API
     {
         public Startup(IConfiguration configuration)
         {
+            this.Configuration = configuration;
         }
 
         public IConfiguration Configuration { get; init; }
@@ -16,11 +17,15 @@ namespace Passive.API
 
             services.AddDBContexts(Configuration);
 
-            services.AddEFCache(Configuration);
+            services.AddEFSecondLevelCache(Configuration);
 
             services.AddEndpointsApiExplorer();
 
-            services.AddSwaggerGen();
+            services.AddSwaggerGen(config =>
+            {
+                config.IgnoreObsoleteActions();
+                config.IgnoreObsoleteProperties();
+            });
 
             services.AddControllers();
         }

@@ -40,7 +40,6 @@
     <Folder Include="Configurations\" />
     <Folder Include="Middlewares\" />
     <Folder Include="Filters\" />
-    <Folder Include="DBModels\" />
   </ItemGroup>
 
   <ItemGroup>

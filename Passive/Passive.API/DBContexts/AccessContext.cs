@@ -2,9 +2,13 @@
 
 namespace Passive.API.DBContexts
 {
-    public class AccessContext : DbContext
+    public partial class AccessContext : DbContext
     {
         public AccessContext(DbContextOptions options) : base(options)
+        {
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
         }
     }

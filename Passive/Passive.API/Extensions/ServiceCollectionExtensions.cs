@@ -1,7 +1,7 @@
 ﻿using EFCoreSecondLevelCacheInterceptor;
+using MessagePack;
 using MessagePack.Formatters;
 using MessagePack.Resolvers;
-using MessagePack;
 using Microsoft.EntityFrameworkCore;
 using Passive.API.DBContexts;
 using Passive.API.Formatters;
@@ -12,17 +12,18 @@ namespace Passive.API.Extensions
     {
         public static IServiceCollection AddDBContexts(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddDbContext<AccessContext>(options =>
-            {
-                // TODO: ConnectionString to Docker PostgresSQL DB and the PostgresSQL Version
-                options.UseNpgsql(configuration.GetConnectionString("PostgreSQL"));
-                options.EnableSensitiveDataLogging(true);
-            });
+            services.AddEntityFrameworkProxies();
+
+            services.AddDbContext<AccessContext>((serviceBuilder, optionsBuilder) => optionsBuilder
+            .UseLazyLoadingProxies()
+            .UseNpgsql(configuration.GetConnectionString("AccessDB"))
+            .UseInternalServiceProvider(serviceBuilder)
+            .EnableSensitiveDataLogging(true), ServiceLifetime.Transient);
 
             return services;
         }
 
-        public static IServiceCollection AddEFCache(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection AddEFSecondLevelCache(this IServiceCollection services, IConfiguration configuration)
         {
             const string cacheProviderName = "redisCache";
             const string serializerName = "messagePack";
