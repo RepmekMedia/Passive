@@ -1,9 +1,9 @@
 ﻿using JSLibrary.Logics.Interfaces;
-using Passive.API.DBModels.AccessModels.Interfaces;
+using Passive.API.DBModels.Interfaces;
 
 namespace Passive.API.DBModels.AccessModels
 {
-    public class Permission : IPermission
+    public class Permission : IBaseModel
     {
         public Guid Id { get; }
 

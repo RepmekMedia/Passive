@@ -1,8 +1,8 @@
-﻿using Passive.API.DBModels.AccessModels.Interfaces;
+﻿using Passive.API.DBModels.Interfaces;
 
 namespace Passive.API.DBModels.AccessModels
 {
-    public class Role : IRole
+    public class Role : IBaseModel
     {
         public Guid Id { get; }
 
